@@ -1,0 +1,17 @@
+{
+  "name": "image-classification-tool",
+  "version": "1.0.0",
+  "description": "Manual image classification tool for generating image classification datasets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Grant Gollier",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "sqlite3": "^5.0.2"
+  }
+}
