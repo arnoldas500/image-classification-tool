@@ -4,17 +4,29 @@ const port = 9995;
 
 let fs = require( 'fs' );
 let path = require( 'path' );
-
+const checkpoint_path = './images/.ipynb_checkpoints'
+const img_path = './images'
 const sqlite3 = require('sqlite3');
 let db = new sqlite3.Database('images.db');
 
+
 async function setup(){
+    
+    //delete .ipynb_checkpoints from images since not an image
+    //fs.rmdirSync(dir, { recursive: true });
+    try {
+      fs.rmdirSync(checkpoint_path, { recursive: true })
+        console.log('.ipynb_checkpoints removed')
+    } catch(err) {
+      console.warn(err)
+    }
+    
     await db.run('CREATE TABLE IF NOT EXISTS images (name TEXT UNIQUE, class TEXT, classified BOOLEAN);', (result, err)=> {
         if (err){
             throw err;
         }
         else {
-            fs.readdir('./images', (err, files) => {
+            fs.readdir(img_path, (err, files) => {
                 if (err){
                     throw err;
                 }
@@ -43,7 +55,7 @@ app.use('/images', express.static('images'));
 
 let config_file = fs.readFileSync('config.json');
 let config = JSON.parse(config_file);
-let img_list = ['start']
+let img_list = []
 
 var count = 0;
 
@@ -53,6 +65,7 @@ app.get('/', (req, res) => {
             res.send(err);
         }
         else if (result) {
+            console.log("image i am seeing ", result)
             if(count == 0){
                 res.render('index.html', {image: result['name'], classes: [ 'Snow', 'Rain', 'IDK' ]});
                 console.log(config.classes)
@@ -78,7 +91,7 @@ app.get('/', (req, res) => {
 // });
 
 app.post('/:image/:className', (req, res) =>{
-    console.log(req.params.image + ":" + req.params.className + " count "+ count);
+//     console.log(req.params.image + ":" + req.params.className + " count "+ count);
 //      console.log(req.params['start'])
 //     console.log(req.params.prev)
     img_list.push(req.params.image)
@@ -100,7 +113,7 @@ app.post('/:image/:className', (req, res) =>{
         [req.params.className, true, req.params.image]);
         res.redirect('/');
     }
-    console.log("image and count after", img_list[count], count)
+    console.log("image label and count after", img_list[count], req.params.className, count )
 
 //     res.redirect('/');
 });
