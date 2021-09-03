@@ -10,10 +10,13 @@
     <body>
     <div class="container">
         <h1 class="display-5">How would you classify this image?</h1>
+        <p>Current Image: <%= image %></p>
         <img class="img-thumbnail" style="height: 60%" src=<%= `/images/${image}` %> >
         <br>
         <div class="row">
+            
             <% classes.forEach((className) => { %>
+                
             <form style="margin-left: 15px" class="form" method="POST" action=<%= `${image}/${className}` %> >
                 <button class="btn" name="className"><%= className %></button>
             </form>

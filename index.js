@@ -68,6 +68,7 @@ app.get('/', (req, res) => {
             console.log("image i am seeing ", result)
             if(count == 0){
                 res.render('index.html', {image: result['name'], classes: [ 'Snow', 'Rain', 'IDK' ]});
+                
                 console.log(config.classes)
             }else{
                 res.render('index.html', {image: result['name'], classes: config.classes});
@@ -104,8 +105,8 @@ app.post('/:image/:className', (req, res) =>{
         console.log("Undo called")
         db.run('UPDATE images SET class = ?, classified = ? WHERE name = ?',
         [req.params.className, false, img_list[count]]);
-        db.run('UPDATE images SET class = ?, classified = ? WHERE name = ?',
-        [req.params.className, false, req.params.image]);
+//         db.run('UPDATE images SET class = ?, classified = ? WHERE name = ?',
+//         [req.params.className, false, req.params.image]);
         res.redirect('/');
     }else{
         count++;
@@ -113,7 +114,7 @@ app.post('/:image/:className', (req, res) =>{
         [req.params.className, true, req.params.image]);
         res.redirect('/');
     }
-    console.log("image label and count after", img_list[count], req.params.className, count )
+    console.log("image label and count after", img_list[count],req.params.image, req.params.className, count )
 
 //     res.redirect('/');
 });
