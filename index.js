@@ -92,29 +92,30 @@ app.get('/', (req, res) => {
 // });
 
 app.post('/:image/:className', (req, res) =>{
-//     console.log(req.params.image + ":" + req.params.className + " count "+ count);
-//      console.log(req.params['start'])
-//     console.log(req.params.prev)
-    img_list.push(req.params.image)
-    
+//     console.log("start img and count ",  img_list, count)     
 //     var last = img_list.pop()
-//     console.log("last ", last)
+
     //maybe try to pop the elemnt and pass the item beffore to below if undo is pressed
     if(req.params.className == "UNDO"){
+        var last = img_list.pop()
+        console.log("prev image that needs reclassification ", last)
         count--;
-        console.log("Undo called")
+//         console.log("Undo called, prev image is ",img_list[-1])
+        
+        //need to update db classified from 1 to 0 for the prev image not current
         db.run('UPDATE images SET class = ?, classified = ? WHERE name = ?',
-        [req.params.className, false, img_list[count]]);
-//         db.run('UPDATE images SET class = ?, classified = ? WHERE name = ?',
-//         [req.params.className, false, req.params.image]);
+        [req.params.className, false, last]);
+        
         res.redirect('/');
     }else{
         count++;
+        img_list.push(req.params.image)
+//         console.log("img_list when pushing ", img_list, img_list.length )
         db.run('UPDATE images SET class = ?, classified = ? WHERE name = ?',
         [req.params.className, true, req.params.image]);
         res.redirect('/');
     }
-    console.log("image label and count after", img_list[count],req.params.image, req.params.className, count )
+//     console.log("image label and count after", img_list[count],req.params.image, req.params.className, count )
 
 //     res.redirect('/');
 });
