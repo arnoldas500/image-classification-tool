@@ -10,6 +10,6 @@
 #SBATCH --output=/rdma/flash/vferrera/slurm_output_logs/log_%j.out                                                                                                     
 
 
-docker run --rm -v /rdma/flash/vferrera:/home/vferrera -v /xcitelab/backup/DOT:/home/vferrera/DOT -v /xcitelab/backup/ny511:/home/vferrera/ny511 -u root -e NB_USER=vf\
-errera -e NB_UID="$(id -u)" -e NB_GID="$(id -g)" -e CHOWN_HOME=yes -e CHOWN_HOME_OPTS="-R" -w "/home/${NB_USER}" --runtime=nvidia --gpus=1 -p 7995:8888 jupyter/minima\
-l-notebook
+docker run --gpus=1 -p 7557:9995 -p 8848:8888 -v /rdma/flash/vferrera:/home/vferrera -v /xcitelab/backup/DOT/data/:/home/vferrera/image-classifica
+tion-tool/DOT -v /xcitelab/backup/ny511/data/:/home/vferrera/image-classification-tool/ny511 -e GRANT_SUDO=yes -e JUPYTER_ENABLE_LAB=yes -e NB_UID
+="$(id -u)" -e NB_GID=1711 -w "/home/vferrera" --user root cschranz/gpu-jupyter:v1.4_cuda-11.2_ubuntu-20.04_python-only
